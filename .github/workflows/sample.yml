@@ -20,5 +20,5 @@ jobs:
         run: echo "Hello World"
       - name: ワークフロー実行者のログ
         run: echo "${{ github.actor }}" # githubコンテキストの参照
-      - name: ワークフロー実行者のログ
+      - name: プルリクのタイトル
         run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
