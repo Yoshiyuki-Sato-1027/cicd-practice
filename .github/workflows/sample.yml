@@ -10,7 +10,11 @@ on:
 
 jobs:
   say_hello:
-    runs-on: ubuntu-latest
+    runs-on:
+      ubuntu-latest
+      # 環境変数の定義はjobレベル
+    env: # 環境変数の定義
+      BRANCH: main # 「BRANCH」という名前の環境変数へ、「main」という値をセット
 
     steps:
       - name: Checkout code
@@ -22,3 +26,9 @@ jobs:
         run: echo "${{ github.actor }}" # githubコンテキストの参照
       - name: プルリクのタイトル
         run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
+
+      - run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH }} # envコンテキスト経由でジョブレベルの環境変数を参照
+
