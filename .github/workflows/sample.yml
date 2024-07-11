@@ -27,15 +27,13 @@ jobs:
       - name: プルリクのタイトル
         run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
 
+      - name: 環境変数をecho
+        run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
 
-      # - name: 環境変数をecho
-      # - run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
+        # - uses: actions/checkout@v4
+        #   with:
+        #     ref: ${{ env.BRANCH }} # envコンテキスト経由でジョブレベルの環境変数を参照
 
-      # - uses: actions/checkout@v4
-      #   with:
-      #     ref: ${{ env.BRANCH }} # envコンテキスト経由でジョブレベルの環境変数を参照
-
-      # - name: 環境変数をオーバーライド
-      # - env:
-      #      BRANCH: 変わったよー
-      #     run: echo "${ BRANCH}"
+        env:
+          BRANCH: 変わったよー
+          run: echo "${ BRANCH}"
