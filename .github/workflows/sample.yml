@@ -30,9 +30,9 @@ jobs:
       - name: 環境変数をecho
         run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
 
-        # - uses: actions/checkout@v4
-        #   with:
-        #     ref: ${{ env.BRANCH }} # envコンテキスト経由でジョブレベルの環境変数を参照
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH }} # envコンテキスト経由でジョブレベルの環境変数を参照
 
         env:
           BRANCH: 変わったよー
