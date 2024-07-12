@@ -31,5 +31,10 @@ jobs:
         run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
 
         env:
-          BRANCH: 変わったよー
+          BRANCH: ブランチをオーバーライドしてます
           run: echo "${ env.BRANCH }"
+
+      - name: GITHUB_ACTOR
+        run: echo "${GITHUB_ACTOR}"
+      - name: github.actor
+        run: echo "${{ github.actor }}"
