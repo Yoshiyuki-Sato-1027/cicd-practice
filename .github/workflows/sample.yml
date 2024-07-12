@@ -16,6 +16,7 @@ jobs:
     env: # 環境変数の定義
       BRANCH: main # 「BRANCH」という名前の環境変数へ、「main」という値をセット
       ACTOR: ${{ github.actor }} # コンテキストの値を環境変数へセット
+      USERNAME: ${{ vars.USERNAME }} # Variablesの参照
 
     steps:
       - name: Checkout code
@@ -42,3 +43,5 @@ jobs:
 
       - name: 中間環境変数でActorにアクセス
         run: echo "${ACTOR}" # 環境変数経由でコンテキストのプロパティを参照
+      - name: varableの参照
+        run: echo "${USERNAME}"
