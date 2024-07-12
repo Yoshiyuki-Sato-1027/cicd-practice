@@ -15,6 +15,7 @@ jobs:
       # 環境変数の定義はjobレベル
     env: # 環境変数の定義
       BRANCH: main # 「BRANCH」という名前の環境変数へ、「main」という値をセット
+      ACTOR: ${{ github.actor }} # コンテキストの値を環境変数へセット
 
     steps:
       - name: Checkout code
@@ -38,3 +39,6 @@ jobs:
         run: echo "${GITHUB_ACTOR}"
       - name: github.actor
         run: echo "${{ github.actor }}"
+
+      - name: 中間環境変数でActorにアクセス
+        run: echo "${ACTOR}" # 環境変数経由でコンテキストのプロパティを参照
