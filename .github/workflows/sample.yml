@@ -24,7 +24,7 @@ jobs:
       - name: Print Hello World
         run: echo "Hello World"
       - name: ワークフロー実行者のログ
-        run: echo "${{ github.actor }}" # githubコンテキストの参照
+        run: echo "${{ github.actor }}" # githubコンテキストの参照、これはアンチパターンで「中間環境変数でActorにアクセス」するべき
       - name: プルリクのタイトル
         run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
 
