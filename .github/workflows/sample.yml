@@ -43,5 +43,6 @@ jobs:
 
       - name: 中間環境変数でActorにアクセス
         run: echo "${ACTOR}" # 環境変数経由でコンテキストのプロパティを参照
+
       - name: varableの参照
         run: echo "${USERNAME}"
