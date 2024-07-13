@@ -41,3 +41,11 @@ jobs:
         run: echo "${PASSWORD}" # ログ出力はマスクされる
       - name: secretsの参照 ログ出力はマスクされない
         run: echo "${PASSWORD:0:1} ${PASSWORD#?}" # ログ出力はマスクされない
+      - name: secretsの参照 ログ出力はマスクされない
+        run: printenv | grep 'LITERAL_'
+        env:
+          LITERAL_NULL: ${{ null }} # null型
+          LITERAL_BOOLEAN: ${{ true }} # boolean型
+          LITERAL_NUMBER: ${{ 1234 }} # number型
+          LITERAL_STRING: ${{ 'Hello' }} # string型（通常記法）
+          LITERAL_OMIT_STRING: World # string型（省略記法）
