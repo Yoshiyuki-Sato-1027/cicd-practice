@@ -1,3 +1,8 @@
+## actionlint について
+
+TODO
+`actionlint`を pre-commit 時にする
+
 ## GithubActions の CICD ワークフローの書き方を学習する
 
 ## コンテキスト
@@ -28,5 +33,3 @@ success()：手前の処理が成功したら true
 failure()：手前の処理が失敗したら true
 cancelled()：手前の処理がキャンセルされたら true
 always()：手前の処理結果を問わず常に true
-
-
