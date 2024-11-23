@@ -17,13 +17,13 @@ jobs:
       PASSWORD: ${{ secrets.PASSWORD }} # Secretsの参照
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Print Hello World
         run: echo "Hello World"
       - name: ワークフロー実行者のログ
         run: echo "${{ github.actor }}" # githubコンテキストの参照、これはアンチパターンで「中間環境変数でActorにアクセス」するべき
-      - name: プルリクのタイトル
-        run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
+      #   - name: プルリクのタイトル
+      #     run: echo "${{ github.event.pull_request.title }}" # github.eventプロパティはオブジェクト型
       - name: 環境変数をecho
         run: echo "${BRANCH}" # シェルコマンドからジョブレベルの環境変数を参照
         env:
@@ -44,7 +44,7 @@ jobs:
       - name: secretsの参照 ログ出力はマスクされない
         run: printenv | grep 'LITERAL_'
         env:
-          LITERAL_NULL: ${{ null }} # null型
+          #   LITERAL_NULL: ${{ null }} # null型
           LITERAL_BOOLEAN: ${{ true }} # boolean型
           LITERAL_NUMBER: ${{ 1234 }} # number型
           LITERAL_STRING: ${{ 'Hello' }} # string型（通常記法）
