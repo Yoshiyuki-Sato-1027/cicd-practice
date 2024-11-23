@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "lint-staged": "lint-staged --config .lintstagedrc.js"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10"
+  }
+}
