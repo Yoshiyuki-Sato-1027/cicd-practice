@@ -1,40 +1,8 @@
-# name: pr label
-# on:
-#   pull_request:
-#     branches:
-#       - main
-#       - staging
-#       - production
-
-# jobs:
-#   pr-label:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       pull-requests: write
-#     steps:
-#       - uses: agaroot-technologies/action-restrict-pr-label@v1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         with:
-#           rules: |
-#             staging <- main [test]
-#             staging <- revert-* [test]
-#             main <- staging [test]
-#             main <- revert-* [test]
-
-#             production <- staging [test]
-#             production <- revert-* [test]
-#             staging <- production [test]
-#             staging <- revert-* [test]
 name: Label Release PR
 
 on:
   pull_request:
     types: opened
-    # branches:
-    #   - main
-    #   - staging
-    #   - production
 
 jobs:
   add-label:
@@ -42,7 +10,7 @@ jobs:
     steps:
       - name: Apply release label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main' }}
+        if: ${{ (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref == 'staging') }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: test
