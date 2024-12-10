@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Apply release label
-        uses: actions-ecosystem/action-add-labels@v1
+        uses: actions-ecosystem/action-add-labels@v1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: test
