@@ -1,4 +1,4 @@
-name: Label Release PR
+name: Exclude from Productivity Metrics
 
 on:
   pull_request:
