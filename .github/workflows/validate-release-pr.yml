@@ -1,5 +1,4 @@
-# stg
-name: Validate Branches for Pull Request
+name: Validate Release PR
 
 on:
   pull_request:
