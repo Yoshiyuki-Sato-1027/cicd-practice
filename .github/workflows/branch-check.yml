@@ -1,0 +1,24 @@
+# stg
+name: Validate Branches for Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      # 仮にmainが更新された時に、このワークフローが走らないようにするため、更新と再オープンのイベントを追加
+
+jobs:
+  validate-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Fail if branch conditions are not met
+        if: ${{ (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
+        run: |
+          echo "Error: Branch conditions are not met."
+          exit 1
