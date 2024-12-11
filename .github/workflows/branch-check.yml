@@ -2,10 +2,7 @@ name: Validate Branches for Pull Request
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+    types: opened
 
 jobs:
   validate-branches:
@@ -13,22 +10,12 @@ jobs:
 
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate base and head branches
         run: |
-          echo "Base: ${{ github.event.pull_request.base.ref }}"
-          echo "Head: ${{ github.event.pull_request.head.ref }}"
 
-          # Check the base and head branch rules
-          if [ "${{ github.event.pull_request.base.ref }}" == "staging" ] && [ "${{ github.event.pull_request.head.ref }}" != "main" ]; then
+          if: ${{ github.event.pull_request.base.ref  == 'staging' && github.event.pull_request.head.ref  != 'main' || github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging' }} then
             echo "Error: The head branch must be 'main' when the base is 'staging'."
             exit 1
           fi
-
-          if [ "${{ github.event.pull_request.base.ref }}" == "production" ] && [ "${{ github.event.pull_request.head.ref }}" != "staging" ]; then
-            echo "Error: The head branch must be 'staging' when the base is 'production'."
-            exit 1
-          fi
-
-          echo "Branch validation passed."
