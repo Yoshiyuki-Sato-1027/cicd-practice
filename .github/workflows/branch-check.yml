@@ -12,10 +12,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: Validate base and head branches
+      - name: Fail if branch conditions are not met
+        if: ${{ (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
         run: |
-
-          if: ${{ github.event.pull_request.base.ref  == 'staging' && github.event.pull_request.head.ref  != 'main' || github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging' }} then
-            echo "Error: The head branch must be 'main' when the base is 'staging'."
-            exit 1
-          fi
+          echo "Error: Branch conditions are not met."
+          exit 1
