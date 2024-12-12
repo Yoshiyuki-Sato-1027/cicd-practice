@@ -18,20 +18,11 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: Exit if PR from 'main' to 'staging'
-        if: ${{ github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'staging' }}
-        run: |
-          echo "PR from 'main' to 'staging' detected, stopping workflow."
-          exit 0  # 正常終了としてワークフローを終了
-
-      - name: Exit if PR from 'staging' to 'production'
-        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'production' }}
-        run: |
-          echo "PR from 'staging' to 'production' detected, stopping workflow."
-          exit 0  # 正常終了としてワークフローを終了
-
       - name: Fail if branch conditions are not met
-        if: ${{ github.event.pull_request.head.ref == 'production' || (github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production') || (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
+        if: ${{ github.event.pull_request.head.ref == 'production' ||
+          (github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production') ||
+          (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') ||
+          (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
         run: |
           echo "Error: Branch conditions are not met."
           exit 1
