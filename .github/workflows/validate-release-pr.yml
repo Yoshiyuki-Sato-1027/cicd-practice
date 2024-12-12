@@ -5,10 +5,6 @@ on:
     types:
       - opened
       - synchronize
-    branches:
-      - main
-      - staging
-      - production
 
 jobs:
   validate-branches:
@@ -18,26 +14,20 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: Fail if branch conditions are not met (Condition 1)
-        if: ${{ github.event.pull_request.head.ref == 'production' }}
+      - name: Exit if PR from 'main' to 'staging'
+        if: ${{ github.event.pull_request.base.ref == 'main' && github.event.pull_request.head.ref == 'staging' }}
         run: |
-          echo "Error: Branch conditions are not met for PR (head is production)."
-          exit 1
+          echo "PR from 'main' to 'staging' detected, stopping workflow."
+          exit 0  # 正常終了としてワークフローを終了
 
-      - name: Fail if branch conditions are not met (Condition 2)
-        if: ${{ github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production' }}
+      - name: Exit if PR from 'staging' to 'production'
+        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'production' }}
         run: |
-          echo "Error: Branch conditions are not met for PR (staging -> non-production base)."
-          exit 1
+          echo "PR from 'staging' to 'production' detected, stopping workflow."
+          exit 0  # 正常終了としてワークフローを終了
 
-      - name: Fail if branch conditions are not met (Condition 3)
-        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main' }}
+      - name: Fail if branch conditions are not met
+        if: ${{ github.event.pull_request.head.ref == 'production' || (github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production') || (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
         run: |
-          echo "Error: Branch conditions are not met for PR (staging -> non-main head)."
-          exit 1
-
-      - name: Fail if branch conditions are not met (Condition 4)
-        if: ${{ github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging' }}
-        run: |
-          echo "Error: Branch conditions are not met for PR (production -> non-staging head)."
+          echo "Error: Branch conditions are not met."
           exit 1
