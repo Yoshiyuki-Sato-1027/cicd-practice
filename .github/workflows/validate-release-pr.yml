@@ -2,7 +2,9 @@ name: Validate Release PR
 
 on:
   pull_request:
-    types: opened
+    types:
+      - opened
+      - synchronize
     branches:
       - main
       - staging
