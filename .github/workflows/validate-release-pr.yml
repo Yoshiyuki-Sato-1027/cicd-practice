@@ -5,6 +5,10 @@ on:
     types:
       - opened
       - synchronize
+    branches:
+      - main
+      - staging
+      - production
 
 jobs:
   validate-branches:
