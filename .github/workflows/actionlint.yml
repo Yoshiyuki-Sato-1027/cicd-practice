@@ -1,5 +1,5 @@
 # CICD要コメント
-# CICD要コメント
+# actionlint.ymlの構文チェックを行う
 name: actionlint
 
 on:
