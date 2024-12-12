@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
+      # - name: Checkout the code
+      #   uses: actions/checkout@v4
 
       - name: Fail if branch conditions are not met
         if: ${{ github.event.pull_request.head.ref == 'production' || (github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production') || (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
