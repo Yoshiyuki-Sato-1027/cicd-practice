@@ -1,5 +1,6 @@
 # CICD要コメント
 # actionlint.ymlの構文チェックを行う
+# actionlintはGitHub Actionsのワークフローの構文チェックを行うツール
 name: actionlint
 
 on:
