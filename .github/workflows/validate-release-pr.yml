@@ -14,27 +14,8 @@ jobs:
       - name: Checkout the code
         uses: actions/checkout@v4
 
-      - name: Set environment variables for branches
-        env:
-          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
-          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+      - name: Fail if branch conditions are not met
+        if: ${{ github.event.pull_request.head.ref == 'production' || (github.event.pull_request.head.ref == 'staging' && github.event.pull_request.base.ref != 'production') || (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref != 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref != 'staging') }}
         run: |
-          echo "BASE_BRANCH=$BASE_BRANCH" >> $GITHUB_ENV
-          echo "HEAD_BRANCH=$HEAD_BRANCH" >> $GITHUB_ENV
-
-      - name: Define branch conditions
-        run: |
-          # Load environment variables
-          source $GITHUB_ENV
-
-          # Define branch conditions
-          IS_HEAD_PRODUCTION=$([[ "$HEAD_BRANCH" == "production" ]])
-          IS_HEAD_STAGING_BASE_NOT_PRODUCTION=$([[ "$HEAD_BRANCH" == "staging" && "$BASE_BRANCH" != "production" ]])
-          IS_BASE_STAGING_HEAD_NOT_MAIN=$([[ "$BASE_BRANCH" == "staging" && "$HEAD_BRANCH" != "main" ]])
-          IS_BASE_PRODUCTION_HEAD_NOT_STAGING=$([[ "$BASE_BRANCH" == "production" && "$HEAD_BRANCH" != "staging" ]])
-          IS_BASE_MAIN_HEAD_PRODUCTION_OR_STAGING=$([[ "$BASE_BRANCH" == "main" && ( "$HEAD_BRANCH" == "production" || "$HEAD_BRANCH" == "staging" ) ]])
-
-          if [[ $IS_HEAD_PRODUCTION || $IS_HEAD_STAGING_BASE_NOT_PRODUCTION || $IS_BASE_STAGING_HEAD_NOT_MAIN || $IS_BASE_PRODUCTION_HEAD_NOT_STAGING || $IS_BASE_MAIN_HEAD_PRODUCTION_OR_STAGING ]]; then
-            echo "Error: Branch conditions are not met."
-            exit 1
-          fi
+          echo "Error: Branch conditions are not met."
+          exit 1
