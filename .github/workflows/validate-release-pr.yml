@@ -4,8 +4,8 @@ on:
   pull_request:
     types:
       - opened
-      - synchronize
-      - reopened
+      # - synchronize
+      # - reopened
       # 仮にmainが更新された時に、このワークフローが走らないようにするため、更新と再オープンのイベントを追加
 
 jobs:
