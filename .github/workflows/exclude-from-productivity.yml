@@ -2,21 +2,31 @@ name: Update PR Title and Add Label
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+    types: opened
 
 jobs:
   update-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Update PR title and add label
+      - name: Set environment variables
         run: |
-          if [ "${{ github.event.pull_request.head.ref }}" = "main" ] && [ "${{ github.event.pull_request.base.ref }}" = "staging" ]; then
-            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映" --add-label "FindyTeam+ 計測対象外"
-          elif [ "${{ github.event.pull_request.head.ref }}" = "staging" ] && [ "${{ github.event.pull_request.base.ref }}" = "production" ]; then
-            gh pr edit "${{ github.event.pull_request.number }}" --title "Prg反映" --add-label "FindyTeam+ 計測対象外"
+          echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "HEAD_REF=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+
+      - name: Update PR title
+        if: ${{ env.BASE_REF == 'staging' && env.HEAD_REF == 'main' || env.BASE_REF == 'production' && env.HEAD_REF == 'staging' }}
+        run: |
+          if [ "$BASE_REF" = "staging" ] && [ "$HEAD_REF" = "main" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映"
+          elif [ "$BASE_REF" = "production" ] && [ "$HEAD_REF" = "staging" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Prd反映"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Apply release label
+        uses: actions-ecosystem/action-add-labels@v1
+        if: ${{ env.BASE_REF == 'staging' && env.HEAD_REF == 'main' || env.BASE_REF == 'production' && env.HEAD_REF == 'staging' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: FindyTeam+ 計測対象外
