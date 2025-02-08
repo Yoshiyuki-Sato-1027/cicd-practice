@@ -1,19 +1,34 @@
-name: Exclude from Productivity Metrics
+name: Update PR Title and Add Label
 
 on:
   pull_request:
-    types:
-      - opened
-      - synchronize
-      - reopened
+    types: opened
 
 jobs:
-  add-label:
+  update-pr:
     runs-on: ubuntu-latest
     steps:
+      - name: Set environment variables
+        run: |
+          echo "BASE_REF=${{ github.event.pull_request.base.ref }}" >> $GITHUB_ENV
+          echo "HEAD_REF=${{ github.event.pull_request.head.ref }}" >> $GITHUB_ENV
+
+      - name: Update PR title
+        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main' || github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref == 'staging' }}
+        run: |
+          if [ "$BASE_REF" = "staging" ] && [ "$HEAD_REF" = "main" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映"
+          elif [ "$BASE_REF" = "production" ] && [ "$HEAD_REF" = "staging" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Prd反映"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+
       - name: Apply release label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref == 'staging') }}
+        if: ${{ github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main' || github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref == 'staging' }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: test
+          labels: FindyTeam+ 計測対象外
