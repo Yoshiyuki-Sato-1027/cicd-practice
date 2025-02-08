@@ -1,4 +1,4 @@
-name: Exclude from Productivity Metrics
+name: Update PR Title and Add Label
 
 on:
   pull_request:
@@ -8,15 +8,15 @@ on:
       - reopened
 
 jobs:
-  add-label:
+  update-pr:
     runs-on: ubuntu-latest
     steps:
-      - name: Apply release label
-        uses: actions-ecosystem/action-add-labels@v1
+      - name: Update PR title and add label
+        run: |
+          if [ "${{ github.event.pull_request.head.ref }}" = "main" ] && [ "${{ github.event.pull_request.base.ref }}" = "staging" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映" --add-label "test"
+          elif [ "${{ github.event.pull_request.head.ref }}" = "staging" ] && [ "${{ github.event.pull_request.base.ref }}" = "production" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Prg反映" --add-label "test"
+          fi
         env:
-          HEAD_REF: ${{ github.event.pull_request.head.ref }}
-          BASE_REF: ${{ github.event.pull_request.base.ref }}
-        if: ${{ (env.BASE_REF == 'staging' && env.HEAD_REF == 'main') || (env.BASE_REF == 'production' && env.HEAD_REF == 'staging') }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          labels: test
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
