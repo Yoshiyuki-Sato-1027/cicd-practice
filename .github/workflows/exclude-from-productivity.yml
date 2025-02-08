@@ -1,0 +1,22 @@
+name: Update PR Title and Add Label
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  update-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update PR title and add label
+        run: |
+          if [ "${{ github.event.pull_request.head.ref }}" = "main" ] && [ "${{ github.event.pull_request.base.ref }}" = "staging" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映" --add-label "test"
+          elif [ "${{ github.event.pull_request.head.ref }}" = "staging" ] && [ "${{ github.event.pull_request.base.ref }}" = "production" ]; then
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Prg反映" --add-label "test"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
