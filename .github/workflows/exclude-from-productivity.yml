@@ -13,7 +13,10 @@ jobs:
     steps:
       - name: Apply release label
         uses: actions-ecosystem/action-add-labels@v1
-        if: ${{ (github.event.pull_request.base.ref == 'staging' && github.event.pull_request.head.ref == 'main') || (github.event.pull_request.base.ref == 'production' && github.event.pull_request.head.ref == 'staging') }}
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        if: ${{ (env.BASE_REF == 'staging' && env.HEAD_REF == 'main') || (env.BASE_REF == 'production' && env.HEAD_REF == 'staging') }}
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: test
