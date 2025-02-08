@@ -14,9 +14,9 @@ jobs:
       - name: Update PR title and add label
         run: |
           if [ "${{ github.event.pull_request.head.ref }}" = "main" ] && [ "${{ github.event.pull_request.base.ref }}" = "staging" ]; then
-            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映" --add-label "test"
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Stg反映" --add-label "FindyTeam+ 計測対象外"
           elif [ "${{ github.event.pull_request.head.ref }}" = "staging" ] && [ "${{ github.event.pull_request.base.ref }}" = "production" ]; then
-            gh pr edit "${{ github.event.pull_request.number }}" --title "Prg反映" --add-label "test"
+            gh pr edit "${{ github.event.pull_request.number }}" --title "Prg反映" --add-label "FindyTeam+ 計測対象外"
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
