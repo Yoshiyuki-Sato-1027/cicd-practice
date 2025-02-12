@@ -8,8 +8,7 @@ on:
     paths:
       - "apps/manage/**"
   pull_request:
-    types:
-      - "labeled"
+    types: [opened, labeled]
     branches:
       - "main"
       - "staging"
