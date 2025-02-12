@@ -5,17 +5,18 @@ on:
       - "main"
       - "staging"
       - "production"
-    paths:
-      - "apps/manage/**"
+    # paths:
+    #   - "apps/manage/**"
   pull_request:
     types:
       - "labeled"
+      - "opened"
     branches:
       - "main"
       - "staging"
       - "production"
-    paths:
-      - "apps/manage/**"
+    # paths:
+    #   - "apps/manage/**"
 jobs:
   test:
     name: Execute React Test
