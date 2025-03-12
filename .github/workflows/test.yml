@@ -5,18 +5,28 @@ on:
       - "main"
       - "staging"
       - "production"
-    paths:
-      - "apps/manage/**"
+    # paths:
+    #   - "apps/manage/**"
   pull_request:
-    types: [opened, labeled]
+    types:
+      - "labeled"
+      - "opened"
     branches:
       - "main"
       - "staging"
       - "production"
-    paths:
-      - "apps/manage/**"
+    # paths:
+    #   - "apps/manage/**"
 jobs:
-  test:
-    name: Execute React Test
-    if: ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || (github.event.action == 'labeled' && github.event.label.name == 'tested')) }}
+  validate-branches:
     runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Fail if branch conditions are not met
+        if: ${{ github.event_name == 'pull_request' && github.event.action == 'labeled' && github.event.label.name == 'tested' }}
+        run: |
+          echo "Error: Branch conditions are not met."
+          exit 1
