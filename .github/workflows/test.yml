@@ -1,0 +1,22 @@
+name: CI/CD for Test
+on:
+  push:
+    branches:
+      - "main"
+      - "staging"
+      - "production"
+    paths:
+      - "apps/manage/**"
+  pull_request:
+    types: [opened, labeled]
+    branches:
+      - "main"
+      - "staging"
+      - "production"
+    paths:
+      - "apps/manage/**"
+jobs:
+  test:
+    name: Execute React Test
+    if: ${{ github.event_name == 'pull_request' && (github.event.action == 'opened' || (github.event.action == 'labeled' && github.event.label.name == 'tested')) }}
+    runs-on: ubuntu-latest
