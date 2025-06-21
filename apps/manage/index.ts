@@ -1,2 +1,1 @@
 const sample = "";
-const c = "";
