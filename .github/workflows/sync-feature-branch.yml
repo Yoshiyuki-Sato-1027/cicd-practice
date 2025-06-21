@@ -8,31 +8,31 @@ on:
 jobs:
   sync-feature-branch:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Configure Git
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-      
+
       - name: Check if feature branch exists
         id: check-branch
         run: |
-          if git ls-remote --heads origin feature-test; then
+          if git ls-remote --heads origin debug-logs; then
             echo "exists=true" >> $GITHUB_OUTPUT
           else
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
-      
+
       - name: Sync feature branch
         if: steps.check-branch.outputs.exists == 'true'
         run: |
-          git checkout feature-test
+          git checkout debug-logs
           git merge master --no-ff -m "Auto-sync with master branch"
-          git push origin feature-test
+          git push origin debug-logs
