@@ -1,6 +1,7 @@
 name: Debug Logs Branch Validation
 
 on:
+  push:
   pull_request:
     branches:
       - debug-logs
