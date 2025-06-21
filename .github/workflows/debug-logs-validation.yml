@@ -34,7 +34,8 @@ jobs:
           for file in $changed_files; do
             echo "Checking file: $file"
             # Get the diff for this file and check if there are changes other than console.log and comments
-            if git diff HEAD~1 HEAD -- "$file" | grep -E "^[+-]" | grep -v -E "(console\.(log|error|warn|info|debug)|^\+\s*//|^\-\s*//|^\+\s*/\*|^\-\s*/\*|^\+\s*\*|^\-\s*\*|^\+\s*\*/|^\-\s*\*/)" | grep -v "^[+-]\s*$" | head -1; then
+            diff_lines=$(git diff HEAD~1 HEAD -- "$file" | grep -E "^[+-]" | grep -v "^[+-]{3}")
+            if echo "$diff_lines" | grep -v -E "console\.(log|error|warn|info|debug)" | grep -v -E "^\+\s*//|^\-\s*//|^\+\s*/\*|^\-\s*/\*|^\+\s*\*|^\-\s*\*|^\+\s*\*/|^\-\s*\*/" | grep -v "^[+-]\s*$" | head -1; then
               echo "❌ Non-console.log/comment changes detected in $file"
               non_console_changes=true
             fi
