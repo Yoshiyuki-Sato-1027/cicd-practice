@@ -1,0 +1,48 @@
+name: Debug Logs Branch Validation
+
+on:
+  push:
+    branches:
+      - debug-logs
+
+jobs:
+  validate-debug-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Check for non-console.log changes
+        run: |
+          echo "Checking changes in debug-logs branch..."
+          
+          # Get the changed files in this push
+          changed_files=$(git diff --name-only HEAD~1 HEAD)
+          echo "Changed files: $changed_files"
+          
+          if [ -z "$changed_files" ]; then
+            echo "No files changed."
+            exit 0
+          fi
+          
+          # Check if there are any non-console.log changes
+          non_console_changes=false
+          for file in $changed_files; do
+            echo "Checking file: $file"
+            # Get the diff for this file and check if there are changes other than console.log and comments
+            if git diff HEAD~1 HEAD -- "$file" | grep -E "^[+-]" | grep -v -E "(console\.log|console\.error|console\.warn|console\.info|console\.debug|^\+\s*//|^\-\s*//|^\+\s*/\*|^\-\s*/\*|^\+\s*\*|^\-\s*\*|^\+\s*\*/|^\-\s*\*/)" | head -1; then
+              echo "❌ Non-console.log/comment changes detected in $file"
+              non_console_changes=true
+            fi
+          done
+          
+          if [ "$non_console_changes" = true ]; then
+            echo "❌ Error: debug-logs branch should only contain console.log and comment changes!"
+            echo "Please remove non-console.log changes and push again."
+            exit 1
+          else
+            echo "✅ All changes are console.log/comment related. Validation passed!"
+          fi
